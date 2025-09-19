@@ -1,8 +1,6 @@
 package uk.gov.hmcts.reform.dev.controllers;
 
 import jakarta.validation.Valid;
-import org.springframework.format.annotation.DateTimeFormat;
-import uk.gov.hmcts.reform.dev.models.Status;
 import uk.gov.hmcts.reform.dev.repository.TaskRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,7 +15,6 @@ import uk.gov.hmcts.reform.dev.models.Task;
 
 import java.util.List;
 import java.util.Optional;
-import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/tasks")
@@ -31,11 +28,22 @@ public class TaskController {
 
     private final TaskRepository repository;
 
+    /**
+     * Retrieves all tasks in the system.
+     *
+     * @return a list of all tasks
+     */
     @GetMapping
     public List<Task> getAllTasks() {
         return repository.findAll();
     }
 
+    /**
+     * Retrieves a task by its unique identifier.
+     *
+     * @param id id of the task to get
+     * @return the task if found, or 404 if not found
+     */
     @GetMapping("/{id}")
     public ResponseEntity<Task> getTaskById(@PathVariable Long id) {
         Optional<Task> task = repository.findById(id);
@@ -43,11 +51,24 @@ public class TaskController {
             .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    /**
+     * Creates a new task.
+     *
+     * @param task the task to create
+     * @return the created task
+     */
     @PostMapping
     public Task createTask(@Valid @RequestBody Task task) {
         return repository.save(task);
     }
 
+    /**
+     * Updates an existing task.
+     *
+     * @param id id of the task to update
+     * @param updatedTask the updated task data
+     * @return the updated task if found, or 404 if not found
+     */
     @PutMapping("/{id}")
     public ResponseEntity<Task> updateTask(@PathVariable Long id, @Valid @RequestBody Task updatedTask) {
         Optional<Task> currentTask = repository.findById(id);
@@ -57,6 +78,12 @@ public class TaskController {
         return ResponseEntity.ok(repository.save(updatedTask));
     }
 
+    /**
+     * Deletes a task by its unique identifier.
+     *
+     * @param id id of the task to delete
+     * @return 204 No Content if deleted, or 404 if not found
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
         if (!repository.existsById(id)) {
