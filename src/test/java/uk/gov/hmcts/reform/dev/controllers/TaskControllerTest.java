@@ -83,7 +83,7 @@ class TaskControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/tasks")
                 .contentType("application/json")
                 .content(json))
-            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(MockMvcResultMatchers.status().isCreated())
             .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("New Task"))
             .andExpect(MockMvcResultMatchers.jsonPath("$.status").value("OPEN"))
             .andExpect(MockMvcResultMatchers.jsonPath("$.dueDateTime").exists());
