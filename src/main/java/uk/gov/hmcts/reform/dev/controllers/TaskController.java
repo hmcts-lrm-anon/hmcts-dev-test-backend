@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.dev.controllers;
 import jakarta.validation.Valid;
 import uk.gov.hmcts.reform.dev.repository.TaskRepository;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,8 +35,8 @@ public class TaskController {
      * @return a list of all tasks
      */
     @GetMapping
-    public List<Task> getAllTasks() {
-        return repository.findAll();
+    public ResponseEntity<List<Task>> getAllTasks() {
+        return ResponseEntity.ok(repository.findAll());
     }
 
     /**
@@ -58,8 +59,9 @@ public class TaskController {
      * @return the created task
      */
     @PostMapping
-    public Task createTask(@Valid @RequestBody Task task) {
-        return repository.save(task);
+    public ResponseEntity<Task> createTask(@Valid @RequestBody Task task) {
+        Task savedTask = repository.save(task);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedTask);
     }
 
     /**
